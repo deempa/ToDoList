@@ -3,6 +3,7 @@ const e = require("express");
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+const date = new Date();
 
 app.set("view engine", "ejs");
 
@@ -20,8 +21,10 @@ const Item = mongoose.model(
 );
 
 app.get("/", function(req, res){
+    var options = { weekday: 'long' };
+    const todayName = date.toLocaleDateString('he-IL', options);
      Item.find({}, function(err, foundItems){
-            res.render("list", {day: "Today", items: foundItems});
+            res.render("list", {day: todayName, items: foundItems});
      });    
 });
 
@@ -38,6 +41,7 @@ app.post("/", function(req, res){
         const item = new Item({
             name: itemName
         });
+
         item.save();
         res.redirect("/");
     }
@@ -52,5 +56,5 @@ app.post("/delete", function(req, res){
 });
 
 app.listen(3000, function(){
-    console.log("Port 3000 is listening");
-})
+    console.log("Port 3000 is listening - localhost:3000");
+});
